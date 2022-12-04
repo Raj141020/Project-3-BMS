@@ -1,5 +1,5 @@
-## Project-3 
+# Project-3 
 
-# Branch name - project/booksManagementGroup42
+## Branch name - project/booksManagementGroup42
 
-# Database name - group42Database
+## Database name - group42Database
