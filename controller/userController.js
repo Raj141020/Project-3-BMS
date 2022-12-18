@@ -47,7 +47,7 @@ exports.createUser = async (req, res) => {
         if (address) {
 
             if (!address.street || !address.city || !address.pincode) {
-                return res.status(400).send({ status: false, message: "If you are using Address attripute Please provide adress data." })
+                return res.status(400).send({ status: false, message: "Please provide Your City, Street and Pincode" })
             }
 
             if (address.street) {
@@ -104,18 +104,11 @@ exports.createUser = async (req, res) => {
 
 
         if (!isValidName(name)) { // Name validation
-            return res.status(400).send({ status: false, message: "Please Provide Proper Name" })
+            return res.status(400).send({ status: false, message: "Please Provide Proper Name and Name should have alphabets only and also have one space inbetween each word, EX-Raj Kumar Singh" })
         }
 
-        /* Example of valid Mobile Numbers  +919367788755
-                                            09898293041
-                                            918765431234
-                                            +16308520397
-                                            786-307-3615 
-                                         */
-
         if (!isValidMobile(phone)) {  // Phone validation
-            return res.status(400).send({ status: false, message: "Phone Number is wrong" })
+            return res.status(400).send({ status: false, message: "Please Provide valid Phone Number and it should be 10 digits only, Ex-9876543210" })
         }
 
         let duplicatePhone = await userModel.findOne({ phone: data.phone }) //Duplicate Phone no checking
@@ -124,7 +117,7 @@ exports.createUser = async (req, res) => {
         }
 
         if (!isValidEmail(email)) { // Email validation
-            return res.status(400).send({ status: false, message: "Please provide valid Email" })
+            return res.status(400).send({ status: false, message: "Please provide valid Email, Ex-RK@gmail.com or raj121@redix.com" })
         }
 
         let duplicateEmail = await userModel.findOne({ email: email }) //Duplicate Email checking
@@ -133,7 +126,7 @@ exports.createUser = async (req, res) => {
         }
 
         if (!isValidPassword(password)) { // Password validation
-            return res.status(400).send({ status: false, message: "Your password must have 8 to 15 characters and the password must be mixture of uppercase, lowercase, number and special character." })
+            return res.status(400).send({ status: false, message: "Your password must have 8 to 15 characters and the password must be mixture of uppercase, lowercase, number and special character, Ex-Raj@141020" })
         }
 
         /*-----------------------------------CREATING USER-----------------------------------------*/
@@ -178,13 +171,7 @@ exports.login = async (req, res) => {
         if (!user)
             return res.status(400).send({ status: false, msg: "email or password is not corerct" });
 
-        let token = jwt.sign(
-            {
-                userId: user._id.toString()
-            },
-            "group42-very-very-secret-key",
-            { expiresIn: '5h' }
-        );
+        let token = jwt.sign({userId: user._id.toString()},"group42-very-very-secret-key",{ expiresIn: '5h' });
 
         console.log(token)
 

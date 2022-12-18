@@ -9,7 +9,7 @@ const isValidName = function (name){
  
 const isValidMobile = function(mobile) {
     const mobileRegex =
-    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+    /^[0-9]{10}$/;
     return mobileRegex.test(mobile);
 };
 
@@ -43,7 +43,7 @@ const isValidPin = function(pin) {
  
 const isEmpty = function (value){
     if (typeof value ==="string" && value.trim().length === 0) return false;
-    if(typeof value === "undefined" || value === null || value === "") return false
+    if(typeof value === "undefined" || value === null) return false
     return true;
 };
 
@@ -52,7 +52,7 @@ const isEmpty = function (value){
 
 
 const isValidBookTitle = function (name){
-    const nameRegex = /^[a-zA-Z0-9:]+(([a-zA-Z0-9: ])?[a-zA-Z0-9:]*)*$/;
+    const nameRegex = /^([a-zA-Z0-9:-]+\s)*[a-zA-Z0-9:-]+$/;
     return nameRegex.test(name);
 };
 
@@ -75,7 +75,7 @@ const isVAlidDate = function (releasedAt){
 /*--------------------------------------------- RATING VALIDATION-------------------------------------------*/
 
 const isValidRating = function (rating){
-    const ratingRegex = /^[1-5_\/\s,.-]+$/
+    const ratingRegex = /^[1-5_\/\s,.-]$/
     return ratingRegex.test(rating)
 }
 

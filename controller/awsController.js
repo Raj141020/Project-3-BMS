@@ -6,8 +6,6 @@ aws.config.update({
     region: "ap-south-1"
 })
 
-// UPLOADILE FUNCTION
-
 let uploadFile = async (file) => {
 
     return new Promise(function (resolve, reject) {
@@ -32,7 +30,6 @@ let uploadFile = async (file) => {
     })
 }
 
-// CREATING AWS LINK
 
 exports.createLink = async (req, res) => {
     try {

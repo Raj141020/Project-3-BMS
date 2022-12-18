@@ -20,6 +20,12 @@ exports.review = async (req, res) => {
 
     try {
 
+        const BookId = req.params.bookId
+
+        if (!isValidObjectId(BookId)) {
+            return res.status(400).send({ status: false, message: "Please provide a valid BookId." })
+        }
+
         let bodyData = req.body
 
         let { bookId, reviewedBy, reviewedAt, rating, review, isDeleted, ...rest } = bodyData
@@ -32,11 +38,6 @@ exports.review = async (req, res) => {
             return res.status(400).send({ status: false, message: "Not allowed to add extra attributes." })
         }
 
-        const BookId = req.params.bookId
-
-        if (!isValidObjectId(BookId)) {
-            return res.status(400).send({ status: false, message: "Please provide a valid BookId." })
-        }
 
         bodyData.bookId = BookId
 
@@ -61,12 +62,12 @@ exports.review = async (req, res) => {
         }
 
         if (!isValidName(reviewedBy)) {
-            bodyData.reviewedBy = 'Guest'
+            return res.status(400).send({ status: false, message: "Please Provide valid Name" })
         }
 
 
         if (!isValidRating(rating)) {
-            return res.status(400).send({ status: false, message: "The rating is invalid,Rating range should be in between 1 to 5." })
+            return res.status(400).send({ status: false, message: "The rating is invalid, it should be Natural Number not in decimal and rating range should be in between 1 to 5. Ex-1,2,3,4,5" })
         }
 
         if (!rating || !review) {
@@ -113,9 +114,6 @@ exports.review = async (req, res) => {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
-
-//>-------------------------------------------------------------------------------------------------------------<//
-
 
 //>-------------------------------------------- UPDATE REVIEW -----------------------------------------<//
 
@@ -177,7 +175,7 @@ exports.updateReview = async (req, res) => {
         }
 
         if (reviewedBy) {
-            if (!isEmpty(reviewedBy) || reviewedBy === "") {
+            if (!isEmpty(reviewedBy) || reviewedBy == "") {
                 return res.status(400).send({ status: false, message: "Value must be given in reviwedBy attributes." })
             }
         }
@@ -224,9 +222,6 @@ exports.updateReview = async (req, res) => {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
-
-
-//>-----------------------------------------------------------------------------------------------------<//
 
 
 //>--------------------------------------- DELETE REVIEW ------------------------------------------<//

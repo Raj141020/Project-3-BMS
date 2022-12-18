@@ -1,7 +1,5 @@
 const bookModel = require("../model/bookModel")
 
-const userModel = require('../model/userModel')
-
 const reviewModel = require('../model/reviewModel')
 
 const { isValidObjectId } = require('mongoose')
@@ -70,23 +68,27 @@ exports.createBook = async (req, res) => {
             return res.status(400).send({ status: false, message: "Title is required" })
         }
         if (!isEmpty(excerpt)) {
-            return res.status(400).send({ status: false, message: "Name is required" })
+            return res.status(400).send({ status: false, message: "Excerpt is required" })
         }
         if (!isEmpty(userId)) {
-            return res.status(400).send({ status: false, message: "Phone Number  is required" })
+            return res.status(400).send({ status: false, message: "userId  is required" })
         }
         if (!isEmpty(ISBN)) {
-            return res.status(400).send({ status: false, message: "Email is required" })
+            return res.status(400).send({ status: false, message: "ISBN is required" })
         }
         if (!isEmpty(category)) {
-            return res.status(400).send({ status: false, message: "Password is required" })
+            return res.status(400).send({ status: false, message: "Category is required" })
         }
         if (!isEmpty(subcategory)) {
-            return res.status(400).send({ status: false, message: "Title is required" })
+            return res.status(400).send({ status: false, message: "Sub category is required" })
+        }
+         if (!isEmpty(bookCover)) {
+            return res.status(400).send({ status: false, message: "Book Cover is required" })
         }
         if (!isEmpty(releasedAt)) {
             return res.status(400).send({ status: false, message: "Name is required" })
         }
+       
 
 
         /*----------------------------------- CHECKING UNIQUE -----------------------------*/
@@ -96,16 +98,21 @@ exports.createBook = async (req, res) => {
 
         const ISBNCheck = await bookModel.findOne({ ISBN })
 
+        const bookCoverCheck = await bookModel.findOne({ bookCover})
+
         if (titleCheck) {
             return res.status(400).send({ status: false, message: "This title is already exist." })
         }
         if (ISBNCheck) {
             return res.status(400).send({ status: false, message: "This ISBN is already exist." })
         }
+        if (bookCoverCheck) {
+            return res.status(400).send({ status: false, message: "This Book Cover is already exist." })
+        }
 
 
         /*---------------------------------------------------------------------------------------*/
-
+ 
         let createBook = await bookModel.create(bodyData)
 
         return res.status(201).send({ status: true, message: `This ${title} Book is created sucessfully.`, data: createBook })
@@ -151,7 +158,12 @@ exports.getBookFrmQuery = async (req, res) => {
         queryData["isDeleted"] = false //added isDeleted attribute in queryData
 
         const bookData = await bookModel.find(queryData).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
-        
+          
+
+        if (bookData.length == 0) {
+            return res.status(404).send({ status: false, message: "No book found!" })
+        }
+
         const sortBook = bookData.sort((a, b) => {
             let fa = a.title.toLowerCase()
             fb = b.title.toLowerCase()
@@ -159,10 +171,6 @@ exports.getBookFrmQuery = async (req, res) => {
             if (fa > fb) return 1;
             return 0
         })
-
-        if (bookData.length == 0) {
-            return res.status(404).send({ status: false, message: "No book found!" })
-        }
 
 
         return res.status(200).send({ status: true, message: "Books list", data: sortBook })
@@ -172,9 +180,6 @@ exports.getBookFrmQuery = async (req, res) => {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
-
-//>------------------------------------------------------------------------------------------------------------------<//
-
 
 
 //>-------------------------------------- GET BOOKS FROM PARAM -------------------------------------<//
@@ -216,8 +221,6 @@ exports.getBooksfrmParam = async (req, res) => {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
-
-//>------------------------------------------------------------------------------------------------------------<//
 
 
 //>-------------------------------------- UPDATE BOOKS --------------------------------------------<//
@@ -316,13 +319,12 @@ exports.updateBook = async (req, res) => {
     }
 };
 
-//>------------------------------------------------------------------------------------------------------------------<//
 
-
-//>-------------------------------------------------- DELETE BOOKS ---------------------------------------------------<//
+//>------------------------------------ DELETE BOOKS ---------------------------------------<//
 
 
 exports.DeleteBook = async function (req, res) {
+
     try {
         const bookId = req.params.bookId
 
