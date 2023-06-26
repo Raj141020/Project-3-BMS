@@ -56,7 +56,7 @@ router.delete('/books/:bookId/review/:reviewId', reviewController.DeleteReview);
 
 
 
-/*............................ VALIDATING END POINT/PATH ........................................*/
+/*........................................ VALIDATING END POINT/PATH ........................................*/
 
 router.all('/*', (req, res) => {
     return res.status(400).send({ status: false, message: "Please provide correct path!" })
